@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 
+from datetime import date
 from operator import indexOf
 import os
 from urllib import request
@@ -62,8 +63,8 @@ for arg in args:
 del wb['Sheet']
 
 
-
-file_title = f'results-{"-".join(args)}.xlsx'
+this_time = date.today()
+file_title = f'{this_time}-results-{"-".join(args)}.xlsx'
 
 wb.save(file_title)
 

@@ -10,10 +10,17 @@ def scrape_cards(cards, sheet, offset):
 
         cell_idx = offset + indexOf(cards, card)+2
         
+        #formatted as currency
         sheet[f'A{cell_idx}'].number_format = '#,##0.00$'
         sheet[f'A{cell_idx}'] = price_formatted
+        
         sheet[f'B{cell_idx}'] = title
-        sheet[f'C{cell_idx}'] = url
+        
+        #formatted as hyperlink
+        sheet[f'C{cell_idx}'].hyperlink = url
+        sheet[f'C{cell_idx}'].style = "Hyperlink"
+        sheet[f'C{cell_idx}'].value = 'URL'
+
 
 
    #print(price, title, url)

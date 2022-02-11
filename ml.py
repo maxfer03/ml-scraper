@@ -3,8 +3,11 @@
 from datetime import date
 from operator import indexOf
 import os
+import shutil
 from urllib import request
 import bs4, requests, openpyxl, sys
+
+
 
 from get_data import scrape_cards
 
@@ -75,7 +78,10 @@ def scrape(*args):
 
     wb.save(file_title)
 
-    print(f'Data saved at {file_title}')
+    os.mkdir('./spreadsheets')
+    shutil.move(f'./{file_title}', f'./spreadsheets/{file_title}')
+
+    print(f'Data saved at ./spreadsheets/{file_title}')
 
 
 

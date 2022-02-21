@@ -1,31 +1,32 @@
 #!/usr/bin/python3
 
 from datetime import date
+from importlib.resources import path
 from operator import indexOf
 import os
 import shutil
 from urllib import request
 import bs4, requests, openpyxl, sys
 
+from flask import send_from_directory
+
 
 
 from get_data import scrape_cards
 
-from tkinter import *
-from tkinter import ttk
 
-def scrape(*args):
+
+def scrape(args, category, location):
     wb = openpyxl.Workbook()
 
     # args = sys.argv[1::]
-
-    args = feet.get().split('/')
+    
 
     args = [x.replace(' ', '-') for x in args]
 
 
     for arg in args:
-        request_url = f"https://ropa.mercadolibre.com.ar/{arg}_Desde_0"
+        request_url = f"https://{category}.mercadolibre.com.{location}/{arg}_Desde_0"
         
         print(f"Looking for {arg} at {request_url}")
         
@@ -74,41 +75,16 @@ def scrape(*args):
 
 
     this_time = date.today()
-    file_title = f'{this_time}-{"-".join(args)}.xlsx'
+    file_title = f'{this_time}-{"-".join(args)}-{category}-{location}.xlsx'
 
     wb.save(file_title)
 
-    os.mkdir('./spreadsheets')
+    try:
+        os.mkdir('./spreadsheets')
+    except:
+        print('Spreadsheets folder already exists.')
     shutil.move(f'./{file_title}', f'./spreadsheets/{file_title}')
 
     print(f'Data saved at ./spreadsheets/{file_title}')
 
-
-
-# GUI Data
-
-root = Tk()
-root.title("Mercadolibre Scraper")
-
-mainframe = ttk.Frame(root, padding="3 3 12 12")
-mainframe.grid(column=0, row=0, sticky=(N, W, E, S))
-root.columnconfigure(0, weight=1)
-root.rowconfigure(0, weight=1)
-
-feet = StringVar()
-feet_entry = ttk.Entry(mainframe, width=20, textvariable=feet)
-feet_entry.grid(column=3, row=1, sticky=(W, E))
-
-
-
-ttk.Button(mainframe, text="Search...", command=scrape).grid(column=3, row=3, sticky=W)
-
-ttk.Label(mainframe, text="Search for:").grid(column=2, row=1, sticky=W)
-
-for child in mainframe.winfo_children(): 
-    child.grid_configure(padx=5, pady=5)
-
-feet_entry.focus()
-root.bind("<Return>", scrape)
-
-root.mainloop()
+    return send_from_directory('./spreadsheets/', file_title,as_attachment=True)

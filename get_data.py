@@ -2,6 +2,7 @@ from operator import indexOf
 import bs4, requests, openpyxl
 
 def scrape_cards(cards, sheet, offset):
+
     for card in cards:
         price = card.find('span',{'class':'price-tag-fraction'}).text
         price_formatted = int(price.replace('.', ''))

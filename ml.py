@@ -10,6 +10,7 @@ import bs4, requests, openpyxl, sys
 
 from flask import send_from_directory
 
+from io import BytesIO
 
 
 from get_data import scrape_cards
@@ -77,14 +78,23 @@ def scrape(args, category, location):
     this_time = date.today()
     file_title = f'{this_time}-{"-".join(args)}-{category}-{location}.xlsx'
 
-    wb.save(file_title)
+    # wb.save(file_title)
 
-    try:
-        os.mkdir('./spreadsheets')
-    except:
-        print('Spreadsheets folder already exists.')
-    shutil.move(f'./{file_title}', f'./spreadsheets/{file_title}')
+    file_stream = BytesIO()
+    wb.save(file_stream)
+    file_stream.seek(0)
 
-    print(f'Data saved at ./spreadsheets/{file_title}')
+    # try:
+    #     os.mkdir('./spreadsheets')
+    # except:
+    #     print('Spreadsheets folder already exists.')
+    # shutil.move(f'./{file_title}', f'./spreadsheets/{file_title}')
 
-    return send_from_directory('./spreadsheets/', file_title,as_attachment=True)
+    # print(f'Data saved at ./spreadsheets/{file_title}')
+
+
+    # file = send_from_directory('./spreadsheets/', file_title,as_attachment=True)
+    
+    # print(file)
+    
+    return (file_stream, file_title)
